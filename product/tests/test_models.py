@@ -19,7 +19,7 @@ class ProductModelTest(TestCase):
             "description": "M1 Chip Mac",
             "brand": "Apple",
             "owner": self.user,
-            "price_unit": "TL",
+            "price_unit": "TRY",
             "price": 17500,
             "stock": 8
         }
@@ -51,7 +51,7 @@ class ProductMethodTest(TestCase):
             "description": "M1 Chip Mac",
             "brand": "Apple",
             "owner": self.user,
-            "price_unit": "TL",
+            "price_unit": "TRY",
             "price": 17500,
             "stock": 8
         }
@@ -65,7 +65,7 @@ class ProductMethodTest(TestCase):
             "description": "M1 Chip Mac",
             "brand": "Apple",
             "owner": self.user,
-            "price_unit": "TL",
+            "price_unit": "TRY",
             "price": 17500,
             "stock": 0
         }

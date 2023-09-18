@@ -16,7 +16,7 @@ class BaseProductAPITestCase(APITestCase):
             "name": "Macbook Air M1 (2020)",
             "description": "M1 Chip Mac",
             "brand": "Apple",
-            "price_unit": "TL",
+            "price_unit": "TRY",
             "price": 17500,
             "stock": 8
         }

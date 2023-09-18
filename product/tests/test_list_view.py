@@ -7,7 +7,7 @@ from product.tests.test_views import BaseProductAPITestCase
 
 
 class ListViewTestCase(BaseProductAPITestCase):
-    def test_list_view(self):
+    def test_list(self):
         product = Product.objects.create(**self.data)
 
         url = reverse('products')
@@ -17,7 +17,7 @@ class ListViewTestCase(BaseProductAPITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data[0].get('code'), str(product.code))
 
-    def test_list_view_without_auth(self):
+    def test_without_auth(self):
         self.client.logout()
 
         url = reverse('products')
@@ -26,7 +26,7 @@ class ListViewTestCase(BaseProductAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_filtered_name_list_view(self):
+    def test_filtered_name(self):
         url = reverse('products')
 
         self.client.post(url, self.data, format='json')
@@ -41,7 +41,7 @@ class ListViewTestCase(BaseProductAPITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['name'], 'Test')
 
-    def test_filtered_code_list_view(self):
+    def test_filtered_code(self):
         url = reverse('products')
 
         create_response = self.client.post(url, self.data, format='json')
@@ -55,7 +55,7 @@ class ListViewTestCase(BaseProductAPITestCase):
         self.assertEqual(len(list_response.data), 1)
         self.assertEqual(list_response.data[0]['code'], create_response.data["code"])
 
-    def test_filtered_brand_list_view(self):
+    def test_filtered_brand(self):
         url = reverse('products')
 
         self.client.post(url, self.data, format='json')
@@ -70,7 +70,7 @@ class ListViewTestCase(BaseProductAPITestCase):
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['brand'], 'testbrand')
 
-    def test_filtered_price_list_view(self):
+    def test_filtered_price(self):
         url = reverse('products')
 
         self.client.post(url, self.data, format='json')

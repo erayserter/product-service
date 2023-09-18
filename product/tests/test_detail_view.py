@@ -7,7 +7,7 @@ from product.tests.test_views import BaseProductAPITestCase
 
 
 class DetailViewTestCase(BaseProductAPITestCase):
-    def test_retrieve_view_found(self):
+    def test_retrieve_found(self):
         url = reverse('products')
 
         response = self.client.post(url, self.data, format='json')
@@ -31,7 +31,7 @@ class DetailViewTestCase(BaseProductAPITestCase):
         self.assertEqual(response.data.get('code'), str(product.code))
         self.assertEqual(response.data.get('owner'), self.user.username)
 
-    def test_retrieve_view_not_found(self):
+    def test_retrieve_not_found(self):
         url = reverse('product-detail', kwargs={
             "code": '123'
         })
@@ -40,7 +40,7 @@ class DetailViewTestCase(BaseProductAPITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_view(self):
+    def test_update(self):
         url = reverse('products')
 
         response = self.client.post(url, self.data, format='json')
@@ -61,7 +61,7 @@ class DetailViewTestCase(BaseProductAPITestCase):
         self.assertEqual(response.data.get('name'), data['name'])
         self.assertEqual(product.name, data['name'])
 
-    def test_delete_view(self):
+    def test_delete(self):
         url = reverse('products')
 
         response = self.client.post(url, self.data, format='json')
