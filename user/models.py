@@ -28,6 +28,9 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted=False)
+
 
 class User(AbstractBaseUser):
     username = models.CharField(
@@ -39,6 +42,7 @@ class User(AbstractBaseUser):
     is_admin = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    deleted = models.BooleanField(default=False)
 
     objects = UserManager()
 
@@ -54,3 +58,7 @@ class User(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
+
+    def delete(self, using=None, keep_parents=False):
+        self.deleted = True
+        self.save()
