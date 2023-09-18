@@ -1,18 +1,18 @@
-from django.contrib.auth.models import User
-
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveDestroyAPIView
+from rest_framework.generics import RetrieveDestroyAPIView, ListCreateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from user.serializers import UserSerializer
+from user.models import User
 
 
-class UserDetailAPIView(RetrieveDestroyAPIView):
+class RetrieveDestroyUserAPIView(RetrieveDestroyAPIView):
     permission_classes = [IsAuthenticated, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    lookup_field = 'username'
 
 
-class UserCreateAPIView(CreateAPIView):
+class ListCreateUserAPIView(ListCreateAPIView):
     permission_classes = [AllowAny, ]
     queryset = User.objects.all()
     serializer_class = UserSerializer

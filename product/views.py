@@ -1,35 +1,30 @@
 import re
-from _decimal import Decimal
 
-from django.db.models import Q
 from rest_framework.permissions import IsAuthenticated
-from rest_framework import filters
-
 from rest_framework.generics import (
-    ListAPIView,
-    CreateAPIView,
-    RetrieveAPIView,
     UpdateAPIView,
-    DestroyAPIView
+    DestroyAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView
 )
 
 from product.models import Product
 from product.serializers import ProductSerializer
 
-from shopping.permissions import IsOwner
+from shopping.permissions import IsOwnerOrReadOnly
 
 
-class RetrieveProductAPIView(RetrieveAPIView):
-    permission_classes = [IsAuthenticated, ]
+class RetrieveUpdateDestroyProductAPIView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly, ]
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'code'
 
 
-class ListProductAPIView(ListAPIView):
+class ListCreateProductAPIView(ListCreateAPIView):
     permission_classes = [IsAuthenticated, ]
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    search_fields = ["name", "code", "brand", ]
 
     def get_queryset(self):  # TODO: will be fixed
         queryset = Product.objects.all()
@@ -51,25 +46,5 @@ class ListProductAPIView(ListAPIView):
 
         return queryset
 
-
-class CreateProductAPIView(CreateAPIView):
-    permission_classes = [IsAuthenticated, ]
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-
-
-class UpdateProductAPIView(UpdateAPIView):
-    permission_classes = [IsAuthenticated, IsOwner, ]
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'code'
-
-
-class DestroyProductAPIView(DestroyAPIView):
-    permission_classes = [IsAuthenticated, IsOwner, ]
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'code'
