@@ -8,7 +8,7 @@ from shopping.models import BaseModel, BaseModelManager
 
 class Product(BaseModel):
     name = models.CharField(max_length=127)
-    code = models.UUIDField(default=uuid.uuid4, unique=True)
+    code = models.CharField(max_length=255, default=uuid.uuid4, unique=True)
     owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True)
     description = models.CharField(max_length=511)
     brand = models.CharField(max_length=127)

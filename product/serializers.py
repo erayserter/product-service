@@ -10,5 +10,5 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = ('code', "owner", "name", "brand", "description", "price", "price_unit", "stock", "has_stock", )
-        read_only_fields = ('code', 'owner', )
+        read_only_fields = ('owner', )
         lookup_field = 'code'

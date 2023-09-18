@@ -44,6 +44,16 @@ class CreateViewTestCase(BaseProductAPITestCase):
         self.assertIsNotNone(response.data.get('code'))
         self.assertEqual(response.data.get('owner'), self.user.username)
 
+    def test_create_view_success_with_code(self):
+        url = reverse('products')
+
+        self.data['code'] = self.data.get('name').replace(' ', '-')
+
+        response = self.client.post(url, self.data, format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data.get('code'), self.data['code'])
+
     def test_create_view_without_auth(self):
         self.client.logout()
 
