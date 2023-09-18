@@ -24,7 +24,7 @@ class ListCreateProductAPIView(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
 
-    def get_queryset(self):  # TODO: will be fixed
+    def get_queryset(self):
         queryset = Product.objects.all()
 
         name = self.request.query_params.get('name')
