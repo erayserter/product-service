@@ -6,6 +6,6 @@ from product.views import (
 )
 
 urlpatterns = [
-    path('/<str:code>', RetrieveUpdateDestroyProductAPIView.as_view()),
-    path('', ListCreateProductAPIView.as_view()),
+    path('/<str:code>', RetrieveUpdateDestroyProductAPIView.as_view(), name='product-detail'),
+    path('', ListCreateProductAPIView.as_view(), name='products'),
 ]

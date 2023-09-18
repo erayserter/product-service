@@ -49,7 +49,7 @@ class User(AbstractBaseUser):
         return self.username
 
     def get_full_name(self):
-        return self.first_name + self.last_name
+        return self.first_name + " " + self.last_name
 
     @property
     def is_staff(self):

@@ -2,8 +2,6 @@ import re
 
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import (
-    UpdateAPIView,
-    DestroyAPIView,
     ListCreateAPIView,
     RetrieveUpdateDestroyAPIView
 )
@@ -37,10 +35,11 @@ class ListCreateProductAPIView(ListCreateAPIView):
         if name:
             queryset = queryset.filter(name__icontains=name)
         if code:
-            queryset = queryset.filter(code__exact=code)
+            queryset = queryset.filter(code__icontains=code)  # TODO: exact daha mantıklı olabilir.
         if brand:
-            queryset = queryset.filter(brand__exact=brand)
-        if price_interval and re.match("^\\d+-\\d+$", price_interval):
+            queryset = queryset.filter(brand__icontains=brand)
+        if price_interval and re.match("^([0-9]*[.])?[0-9]+-([0-9]*[.])?[0-9]+$", price_interval):
+            # if matches a string with two floating numbers seperated by -
             prices = price_interval.split('-')
             queryset = queryset.filter(price__gte=prices[0], price__lte=prices[1])
 

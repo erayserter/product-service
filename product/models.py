@@ -18,6 +18,9 @@ class Product(BaseModel):
 
     objects = BaseModelManager()
 
+    def __str__(self):
+        return self.name
+
     @property
     def has_stock(self):
         return self.stock > 0
