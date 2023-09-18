@@ -27,6 +27,10 @@ class ListCreateProductAPIView(ListCreateAPIView):
     def get_queryset(self):
         queryset = Product.objects.all()
 
+        username = self.kwargs.get('username')
+        if username:
+            queryset = queryset.filter(owner__username=username)
+
         name = self.request.query_params.get('name')
         code = self.request.query_params.get('code')
         brand = self.request.query_params.get('brand')
