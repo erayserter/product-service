@@ -1,3 +1,5 @@
+from django.urls import reverse
+
 from rest_framework.test import APITestCase, APIClient
 
 from user.models import User
@@ -20,3 +22,29 @@ class BaseProductAPITestCase(APITestCase):
             "price": 17500,
             "stock": 8
         }
+
+    def client_create_product(self):
+        url = reverse('products')
+
+        return self.client.post(url, self.data, format='json')
+
+    def client_retrieve_product(self, code):
+        url = reverse('product-detail', kwargs={
+            "code": code
+        })
+
+        return self.client.get(url)
+
+    def client_update_product(self, code, data):
+        url = reverse('product-detail', kwargs={
+            "code": code
+        })
+
+        return self.client.patch(url, data, format='json')
+
+    def client_delete_product(self, code):
+        url = reverse('product-detail', kwargs={
+            'code': code
+        })
+
+        return self.client.delete(url)

@@ -8,17 +8,11 @@ from product.tests.test_views import BaseProductAPITestCase
 
 class DetailViewTestCase(BaseProductAPITestCase):
     def test_retrieve_found(self):
-        url = reverse('products')
-
-        response = self.client.post(url, self.data, format='json')
+        response = self.client_create_product()
 
         product = Product.objects.get(code=response.data['code'])
 
-        url = reverse('product-detail', kwargs={
-            "code": product.code
-        })
-
-        response = self.client.get(url)
+        response = self.client_retrieve_product(product.code)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data.get('name'), product.name)
@@ -32,46 +26,28 @@ class DetailViewTestCase(BaseProductAPITestCase):
         self.assertEqual(response.data.get('owner'), self.user.username)
 
     def test_retrieve_not_found(self):
-        url = reverse('product-detail', kwargs={
-            "code": '123'
-        })
-
-        response = self.client.get(url)
+        response = self.client_retrieve_product("123")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update(self):
-        url = reverse('products')
+        data = {"name": "Test Product"}
 
-        response = self.client.post(url, self.data, format='json')
+        response_create = self.client_create_product()
+        response_update = self.client_update_product(response_create.data['code'], data)
 
-        url = reverse('product-detail', kwargs={
-            "code": response.data['code']
-        })
+        product = Product.objects.get(code=response_update.data['code'])
 
-        data = {
-            "name": "Test Product"
-        }
-
-        response = self.client.patch(url, data, format='json')
-
-        product = Product.objects.get(code=response.data['code'])
-
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data.get('name'), data['name'])
+        self.assertEqual(response_update.status_code, status.HTTP_200_OK)
+        self.assertEqual(response_update.data.get('name'), data['name'])
         self.assertEqual(product.name, data['name'])
 
     def test_delete(self):
-        url = reverse('products')
-
-        response = self.client.post(url, self.data, format='json')
+        response_create = self.client_create_product()
 
         self.assertTrue(Product.objects.exists())
 
-        url = reverse('product-detail', kwargs={
-            'code': response.data['code']
-        })
+        response_delete = self.client_delete_product(response_create.data['code'])
 
-        self.client.delete(url)
-
+        self.assertEqual(response_delete.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Product.objects.exists())

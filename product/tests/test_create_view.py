@@ -1,5 +1,3 @@
-from django.urls import reverse
-
 from rest_framework import status
 
 from product.tests.test_views import BaseProductAPITestCase
@@ -7,9 +5,7 @@ from product.tests.test_views import BaseProductAPITestCase
 
 class CreateViewTestCase(BaseProductAPITestCase):
     def test_view_success(self):
-        url = reverse('products')
-
-        response = self.client.post(url, self.data, format='json')
+        response = self.client_create_product()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get('name'), self.data['name'])
@@ -23,40 +19,30 @@ class CreateViewTestCase(BaseProductAPITestCase):
         self.assertEqual(response.data.get('owner'), self.user.username)
 
     def test_success_with_code(self):
-        url = reverse('products')
-
         self.data['code'] = self.data.get('name').replace(' ', '-')
-
-        response = self.client.post(url, self.data, format='json')
+        response = self.client_create_product()
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data.get('code'), self.data['code'])
 
     def test_duplicate_code(self):
-        url = reverse('products')
-
         self.data['code'] = self.data.get('name').replace(' ', '-')
-
-        response_first = self.client.post(url, self.data, format='json')
-        response_second = self.client.post(url, self.data, format='json')
+        response_first = self.client_create_product()
+        response_second = self.client_create_product()
 
         self.assertEqual(response_first.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response_first.data.get('code'), self.data['code'])
         self.assertEqual(response_second.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_invalid_currency(self):
-        url = reverse('products')
-
         self.data['price_unit'] = 'TL'
-        response = self.client.post(url, self.data, format='json')
+        response = self.client_create_product()
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_without_auth(self):
         self.client.logout()
 
-        url = reverse('products')
-
-        response = self.client.post(url, self.data, format='json')
+        response = self.client_create_product()
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
